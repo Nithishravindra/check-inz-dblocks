@@ -19,3 +19,7 @@ CREATE TABLE seats (
     FOREIGN KEY (theatre_id) REFERENCES theatre(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+--- 
+GRANT ALL PRIVILEGES ON dbz.* TO 'X'@'%' IDENTIFIED BY 'X';
+FLUSH PRIVILEGES;
+--- 

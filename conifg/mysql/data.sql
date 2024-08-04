@@ -32,36 +32,14 @@ BEGIN
     DECLARE row_num INT DEFAULT 1;
     DECLARE col_num CHAR(1);
     DECLARE seat_name VARCHAR(4);
-    DECLARE max_rows INT DEFAULT 20;  -- Adjust as needed
-    DECLARE max_cols CHAR(1) DEFAULT 'F';  -- Adjust as needed
+    DECLARE max_rows INT DEFAULT 20;  -- Number of rows
+    DECLARE max_cols CHAR(1) DEFAULT 'J';  -- Number of columns
     DECLARE current_col CHAR(1);
 
+    -- Loop through rows
     WHILE row_num <= max_rows DO
         SET current_col = 'A';
-        WHILE current_col <= max_cols DO
-            SET seat_name = CONCAT(row_num, current_col);
-            INSERT INTO seats (name) VALUES (seat_name);
-            SET current_col = CHAR(ASCII(current_col) + 1);
-        END WHILE;
-        SET row_num = row_num + 1;
-    END WHILE;
-END //
-
-DELIMITER ;
-
-DELIMITER //
-
-CREATE PROCEDURE InsertSeats()
-BEGIN
-    DECLARE row_num INT DEFAULT 1;
-    DECLARE col_num CHAR(1);
-    DECLARE seat_name VARCHAR(4);
-    DECLARE max_rows INT DEFAULT 20;  -- Adjust as needed
-    DECLARE max_cols CHAR(1) DEFAULT 'F';  -- Adjust as needed
-    DECLARE current_col CHAR(1);
-
-    WHILE row_num <= max_rows DO
-        SET current_col = 'A';
+        -- Loop through columns
         WHILE current_col <= max_cols DO
             SET seat_name = CONCAT(row_num, current_col);
             INSERT INTO seats (name) VALUES (seat_name);
