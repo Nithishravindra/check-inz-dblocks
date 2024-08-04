@@ -15,17 +15,14 @@ func GetAllUsers(pool *mysql.ConnPool) ([]models.User, error) {
 
 	SQLQUERY := "SELECT id, name FROM users;"
 
-	// Execute the query
 	rows, err := conn.Db.Query(SQLQUERY)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	// Create a slice to store the users
 	var users []models.User
 
-	// Iterate over the results
 	for rows.Next() {
 		var user models.User
 		err := rows.Scan(&user.ID, &user.Name)
@@ -55,21 +52,18 @@ func PrintSeatDetails(pool *mysql.ConnPool) {
 		panic(err)
 	}
 	log.Printf("Number of booked seats: %d\n", bookedSeats)
-
 }
 
 func ResetSeatDetails(pool *mysql.ConnPool) {
 	conn, _ := pool.Get()
 	defer pool.Put(conn)
-
+	log.Println("Resetting seats for theatre_id 1")
 	_, err := conn.Db.Exec("UPDATE seats SET user_id = NULL WHERE theatre_id = ?", 1)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("User IDs set to NULL for theatre_id %d\n", 1)
 }
 
-// PrintSeatingArrangement prints the seating arrangement with occupied seats marked
 func PrintSeatingArrangement(pool *mysql.ConnPool) {
 	conn, err := pool.Get()
 	if err != nil {
@@ -77,7 +71,7 @@ func PrintSeatingArrangement(pool *mysql.ConnPool) {
 	}
 	defer pool.Put(conn)
 
-	rows, err := conn.Db.Query("SELECT name, user_id FROM seats WHERE theatre_id = ?", 1)
+	rows, err := conn.Db.Query("SELECT name, user_id FROM seats WHERE theatre_id = 1")
 	if err != nil {
 		log.Fatalf("Error querying seats: %v", err)
 	}
@@ -101,9 +95,8 @@ func PrintSeatingArrangement(pool *mysql.ConnPool) {
 		log.Fatalf("Error iterating rows: %v", err)
 	}
 
-	// Define the seating grid dimensions
-	rowsInGrid := 10 // Adjust based on your actual grid layout
-	colsInGrid := 20 // Adjust based on your actual grid layout
+	rowsInGrid := 15
+	colsInGrid := 8
 
 	// Print the seating arrangement
 	fmt.Println("Seating Arrangement:")

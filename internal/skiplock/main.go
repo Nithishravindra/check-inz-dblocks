@@ -1,6 +1,7 @@
-package withoutlock
+package skiplock
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/nithishravindra/sql-locks/internal/models"
@@ -18,14 +19,19 @@ func BookSeat(user models.User, pool *mysql.ConnPool) (*models.Seat, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error beginning transaction: %v", err)
 	}
-	defer txn.Rollback()
 
 	// Query for available seat
-	row := txn.QueryRow(`SELECT id, name, theatre_id, user_id FROM seats WHERE theatre_id = 1 AND user_id IS NULL ORDER BY id LIMIT 1`)
+	row := txn.QueryRow(`SELECT id, name, theatre_id, user_id FROM seats 
+		WHERE theatre_id = 1 AND user_id IS NULL 
+		ORDER BY id LIMIT 1 FOR UPDATE SKIP LOCKED
+	`)
 
 	var seat models.Seat
 	err = row.Scan(&seat.ID, &seat.Name, &seat.TheatreID, &seat.UserID)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil // No available seat
+		}
 		return nil, fmt.Errorf("error querying seat: %v", err)
 	}
 

@@ -6,7 +6,7 @@ BEGIN
     DECLARE random_name VARCHAR(255);
     DECLARE characters CHAR(36) DEFAULT 'abcdefghijklmnopqrstuvwxyz0123456789';
 
-    WHILE counter < 200 DO
+    WHILE counter < 120 DO
         SET random_name = '';
         WHILE CHAR_LENGTH(random_name) < 10 DO
             SET random_name = CONCAT(random_name, SUBSTRING(characters, FLOOR(1 + RAND() * 36), 1));
@@ -27,13 +27,13 @@ INSERT INTO theatre (name) VALUES ('INOX');
 
 DELIMITER //
 
-CREATE PROCEDURE InsertSeats()
+CREATE PROCEDURE InsertSeats1()
 BEGIN
     DECLARE row_num INT DEFAULT 1;
     DECLARE col_num CHAR(1);
     DECLARE seat_name VARCHAR(4);
-    DECLARE max_rows INT DEFAULT 20;  -- Number of rows
-    DECLARE max_cols CHAR(1) DEFAULT 'J';  -- Number of columns
+    DECLARE max_rows INT DEFAULT 15;  -- Number of rows
+    DECLARE max_cols CHAR(1) DEFAULT 'H';  -- Number of columns ('H' represents 8 columns)
     DECLARE current_col CHAR(1);
 
     -- Loop through rows
@@ -51,4 +51,4 @@ END //
 
 DELIMITER ;
 
-CALL InsertSeats();
+CALL InsertSeats1();
